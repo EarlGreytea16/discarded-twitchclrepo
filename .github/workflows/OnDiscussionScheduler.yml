@@ -1,0 +1,31 @@
+name: OnDiscussionScheduler
+run-name: ${{ github.actor }} has Requested to Edit Scheduler
+on:
+  workflow_dispatch:
+  discussion:
+    types: created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const query = `query($owner:String!, $name:String!, $label:String!) {
+              repository(owner:$owner, name:$name){
+                issues(first:100, labels: [$label]) {
+                  nodes {
+                    id
+                  }
+                }
+              }
+            }`;
+            const variables = {
+              owner: context.repo.owner,
+              name: context.repo.repo,
+              label: 'wontfix'
+            }
+            const result = await github.graphql(query, variables)
+            console.log(result)

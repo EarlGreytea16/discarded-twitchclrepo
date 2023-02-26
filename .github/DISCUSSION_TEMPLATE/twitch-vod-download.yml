@@ -1,0 +1,86 @@
+title: "[Vod Download]"
+labels: ["help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        트위치 Vod 목록을 볼 수 없는 국가(한국 등)에서는 아래의 트위치 채널 분석 사이트를 사용해주세요.
+        ![](https://i.imgur.com/w6en258.jpg)
+        ![](https://i.imgur.com/w6en258.jpg)
+        * [https://twitchtracker.com](https://twitchtracker.com)
+        * [https://streamscharts.com](https://streamscharts.com)
+  - type: textarea
+    id: urls
+    attributes:
+      label: Twitch-Urls
+      description: |
+        여기에 영상 주소를 입력해주세요.
+        지원되는 영상(및 클립) 주소 형식은 다음과 같습니다.
+      placeholder: |
+        https://www.twitch.tv/videos/1717942626
+        https://www.twitch.tv/airikanna_stellive/clip/ClumsyTrappedWoodcockGivePLZ-vnCQBHGHBMtZw6rj
+        https://twitchtracker.com/naseongkim/streams/40016725719
+        https://streamscharts.com/channels/snow_hite/streams/40044090471
+      render: AsciiDocs
+    validations:
+      required: true
+  - type: dropdown
+    id: quality
+    attributes:
+      label: Video-Quality
+      description: |
+        다운로드 받을 영상의 화질을 선택해주세요.
+        여러 화질을 선택할 수 있으며, 이 경우 선택한 모든 화질의 영상을 다운로드 받습니다.
+        * chunked는 영상의 원본 화질입니다.
+        * 만약 선택한 영상의 화질을 서버에서 찾을 수 없을 경우 chunked 화질
+      multiple: true
+      options:
+        - chunked
+        - 1080p
+        - 720p
+        - 480p
+    validations:
+      required: true
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Commit to Help
+      description: |
+        After submitting this, I commit to one of:
+
+          * Read open questions until I find 2 where I can help someone and add a comment to help there.
+          * I already hit the "watch" button in this repository to receive notifications and I commit to help at least 2 people that ask questions in the future.
+          * Review one Pull Request by downloading the code and following [all the review process](https://fastapi.tiangolo.com/help-fastapi/#review-pull-requests).
+
+      options:
+        - label: I commit to help with one of those options 👆
+          required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        What is the problem, question, or error?
+
+        Write a short description telling me what you are doing, what you expect to happen, and what is currently happening.
+      placeholder: |
+        * Open the browser and call the endpoint `/`.
+        * It returns a JSON with `{"Hello": "World"}`.
+        * But I expected it to return `{"Hello": "Sara"}`.
+    validations:
+      required: true
+
+  - type: input
+    id: fastapi-version
+    attributes:
+      label: FastAPI Version
+      description: |
+        What FastAPI version are you using?
+
+        You can find the FastAPI version with:
+
+        ```bash
+        python -c "import fastapi; print(fastapi.__version__)"
+        ```
+    validations:
+      required: true

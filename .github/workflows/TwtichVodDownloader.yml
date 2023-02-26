@@ -1,0 +1,24 @@
+name: TwitchVodDownloader
+run-name: twitch-scheduler is downloading Twitch Vods
+on:
+  workflow_run:
+    workflows: ["TwitchUrlParser"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: fetching urls
+        uses: actions/download-artifact@v3
+        with:
+          name: twitchm3u8urls
+      - name: pre-work
+        run: |
+          sudo apt update
+          sudo apt-get update
+          sudo add-apt-repository ppa:apt-fast/stable
+          sudo apt install apt-fast
+          sudo apt-get -y -o Acquire::http::Dl-Limit=30600 install ffmpeg librsvg

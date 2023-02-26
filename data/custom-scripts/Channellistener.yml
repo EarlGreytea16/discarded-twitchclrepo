@@ -1,0 +1,26 @@
+name: ChannelAdocListener
+run-name: ${{ github.actor }} has edited ChanneltoRelease.adoc
+on:
+  push:
+    paths:
+    - ChanneltoRelease.adoc
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: pre-work
+        run: |
+          sudo apt update
+          sudo apt-get update
+          sudo add-apt-repository ppa:rmescandon/yq
+          sudo apt-get -y install yq grep
+      - name: check validation
+        run: |
+          declare -i step_error=0
+          ResolutionPref0=$(grep '^// ::ResolutionPref0::' -n -m 1 'ChanneltoRelease.adoc') || ((step_error++))
+          ResolutionPrefE=$(tac 'ChanneltoRelease.adoc' | grep '^// ::ResolutionPrefE::' -n -m 1) || ((step_error++))
+          if [ "$step_error" -eq 0 ]; then 
+            tail +$ResolutionPref0 ChanneltoRelease.adoc | head -n $((ResolutionPrefE-ResolutionPref0))
+          fi

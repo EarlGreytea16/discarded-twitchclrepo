@@ -1,0 +1,17 @@
+name: TwitchUrlParser
+run-name: twitch-scheduler is parsing urls to pure m3u8 urls.
+on:
+  workflow_run:
+    workflows: ["ScheduleAdocListener", "ChannelAdocListener", "VodAdocListener"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: fetching urls
+        uses: actions/download-artifact@v3
+        with:
+          name: vaildtwitchurls

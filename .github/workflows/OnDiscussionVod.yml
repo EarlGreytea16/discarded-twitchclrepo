@@ -1,0 +1,18 @@
+name: OnDiscussionVod
+run-name: ${{ github.actor }} has Requested to Download Vod
+on:
+  workflow_dispatch:
+  discussion:
+    types: created
+
+jobs:
+  CheckVaildVod:
+    if: github.event.discussion.category.name == 'Twitch-Vod-Download'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: stefanbuck/github-issue-parser@v3
+        id: issue-parser
+        with:
+          template-path: .github/DISCUSSION_TEMPLATE/twitch-vod-download.yml
+          issue-body: ${{ github.event.discussion.body }}
