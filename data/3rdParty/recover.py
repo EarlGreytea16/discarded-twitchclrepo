@@ -47,7 +47,7 @@ def link_checker(link):
     else:
         print(
             'Check the link again. (An unsupported link has been entered '
-            'or the link has an error.)')
+            'or the link has an error.)', file=sys.stderr)
         return 0
 
 
@@ -155,7 +155,7 @@ def linktimecheck_twitchtracker(link):
     try:
         time = gelenveri[0].text
     except Exception as e:
-        print(f"{type(e).__name__} was raised: {e}")
+        print(f"{type(e).__name__} was raised: {e}", file=sys.stderr)
         return None
 
     print(f'Clock data: {time}', file=sys.stderr)
@@ -234,7 +234,7 @@ def find(timestamp, domain):
             i.join()
 
 
-domains = read_file_lines(parent_path() + '\\' + 'domains.txt')
+domains = read_file_lines(os.path.join(parent_path(), 'domains.txt'))
 
 print('Find the broadcast link you want from Twitchtracker or Streamscharts site.', file=sys.stderr)
 inputlink = sys.argv[1]
@@ -272,6 +272,6 @@ for domain in domains:
         break
 
 if find1cu == 0:
-    print('No File Found on Twitch Servers.')
+    print('No File Found on Twitch Servers.', file=sys.stderr)
 else:
     print(find1cu)
