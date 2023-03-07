@@ -2,6 +2,7 @@ import datetime
 import hashlib
 import random
 import sys
+import os
 import urllib.request
 from threading import Thread
 import requests
@@ -17,8 +18,13 @@ def read_file_lines(file_path):
     return lines
 
 
+# get this script's path's parent path
+def parent_path():
+    return os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+
 # check link is twitchtracker or streamscharts
-def linkChecker(link):
+def link_checker(link):
     global streamername
     global vodID
     link = link.split('/')
@@ -45,7 +51,7 @@ def linkChecker(link):
         return 0
 
 
-def linkTimeCheck_streamscharts(link):
+def linktimecheck_streamscharts(link):
     r = requests.get(link)
     soup = BeautifulSoup(r.content, 'html.parser')
     gelenveri = soup.find_all('time', 'ml-2 font-bold')
@@ -53,7 +59,7 @@ def linkTimeCheck_streamscharts(link):
     try:
         time = gelenveri[0].text
     except Exception as e:
-        print(f"{type(e).__name__} was raised: {e}")
+        print(f"{type(e).__name__} was raised: {e}", file=sys.stderr)
         return None
 
     if '\n' in time:
@@ -61,8 +67,8 @@ def linkTimeCheck_streamscharts(link):
     if ',' in time:
         time = time.replace(',', '')
 
-    print(f'Clock data: {time}')
-    print(f'Streamer name: {streamername} \nvodID: {vodID}')
+    print(f'Clock data: {time}', file=sys.stderr)
+    print(f'Streamer name: {streamername} \nvodID: {vodID}', file=sys.stderr)
 
     time = time.split(' ')
     hoursandminut = time[3]
@@ -108,11 +114,11 @@ def linkTimeCheck_streamscharts(link):
         minute) + '-' + str(
         second)
 
-    print(f'timestamp', timestamp)
+    print(f'timestamp', timestamp, file=sys.stderr)
     return timestamp
 
 
-def linkTimeCheck_twitchtracker(link):
+def linktimecheck_twitchtracker(link):
     useragent = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
         "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
@@ -152,8 +158,8 @@ def linkTimeCheck_twitchtracker(link):
         print(f"{type(e).__name__} was raised: {e}")
         return None
 
-    print(f'Clock data: {time}')
-    print(f'Streamer name: {streamername} \nvodID: {vodID}')
+    print(f'Clock data: {time}', file=sys.stderr)
+    print(f'Streamer name: {streamername} \nvodID: {vodID}', file=sys.stderr)
 
     firstandsecond_time = gelenveri[0].text.split(' ')
     first_time = firstandsecond_time[0].split('-')
@@ -170,7 +176,7 @@ def linkTimeCheck_twitchtracker(link):
         minute) + '-' + str(
         second)
 
-    print(f'timestamp', timestamp)
+    print(f'timestamp', timestamp, file=sys.stderr)
     return timestamp
 
 
@@ -228,24 +234,24 @@ def find(timestamp, domain):
             i.join()
 
 
-domains = read_file_lines('domains.txt')
+domains = read_file_lines(parent_path() + '\\' + 'domains.txt')
 
-print('Find the broadcast link you want from Twitchtracker or Streamscharts site.')
+print('Find the broadcast link you want from Twitchtracker or Streamscharts site.', file=sys.stderr)
 inputlink = sys.argv[1]
 
-linkCheck = linkChecker(inputlink)
+linkCheck = link_checker(inputlink)
 
 if linkCheck == 2 or linkCheck == 4:  # streamscharts
     print('Input Link is Streamscharts Link. \n'
-          'Date and Time are checking..')
-    timestamp = linkTimeCheck_streamscharts(inputlink)
+          'Date and Time are checking..', file=sys.stderr)
+    timestamp = linktimecheck_streamscharts(inputlink)
 elif linkCheck == 1 or linkCheck == 3:  # twitchtracker
     print('Input Link is Twitchtracker Link. \n'
-          'Date and Time are checking..')
-    timestamp = linkTimeCheck_twitchtracker(inputlink)
+          'Date and Time are checking..', file=sys.stderr)
+    timestamp = linktimecheck_twitchtracker(inputlink)
 else:
     print('You entered an unsupported link or '
-          'An unknown error has occurred.')
+          'An unknown error has occurred.', file=sys.stderr)
     sys.exit(1)
 
 if timestamp is None:
@@ -254,7 +260,7 @@ if timestamp is None:
         'There is nothing I can do for this error for now. \n'
         'Please fork if you can bypass this cloudflare. \n'
         'You will not get an error when you try again after a while. \n'
-        'So try again after a while. ')
+        'So try again after a while.', file=sys.stderr)
     sys.exit(1)
 
 find1cu = 0
